@@ -1,14 +1,18 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Platform } from "react-native";
 import ImageViewer from "@/components/ImageViewer";
 import Button from "@/components/Button";
 import * as ImagePicker from "expo-image-picker";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import IconButton from "@/components/IconButton";
 import CircleButton from "@/components/CircleButton";
 import EmojiPicker from "@/components/EmojiPicker";
 import EmojiList from "@/components/EmojiList";
 import EmojiSticker from "@/components/EmojiSticker";
 import { ImageSource } from "expo-image";
+import * as MediaLibrary from "expo-media-library";
+import { captureRef } from "react-native-view-shot";
+import { DomToImage } from "dom-to-image";
+
 const PlaceholderImage = require("@/assets/images/background-image.png");
 export default function Index() {
   const [selectedImage, setSelectedImage] = useState<string | undefined>(
@@ -19,6 +23,8 @@ export default function Index() {
   const [pickedEmoji, setPickedEmoji] = useState<ImageSource | undefined>(
     undefined
   );
+  const [status, requestPermission] = MediaLibrary.usePermissions();
+  const imageRef = useRef<View>(null);
 
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -34,6 +40,9 @@ export default function Index() {
     } else {
       alert("You did not select any image.");
     }
+    if (status === null) {
+      requestPermission();
+    }
   };
   const onReset = () => {
     setShowAppOptions(false);
@@ -45,13 +54,43 @@ export default function Index() {
   const onModalClose = () => {
     setIsModalVisible(false);
   };
-
   const onSaveImageAsync = async () => {
-    // we will implement this later
+    if (Platform.OS !== "web") {
+      try {
+        const localUri = await captureRef(imageRef, {
+          height: 440,
+          quality: 1,
+        });
+
+        await MediaLibrary.saveToLibraryAsync(localUri);
+        if (localUri) {
+          alert("Saved!");
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      try {
+        //@ts-ignore
+        const dataUrl = await DomToImage.toJpeg(imageRef.current, {
+          quality: 0.95,
+          width: 320,
+          height: 440,
+        });
+
+        let link = document.createElement("a");
+        link.download = "sticker-smash.jpeg";
+        link.href = dataUrl;
+        link.click();
+      } catch (e) {
+        console.log(e);
+      }
+    }
   };
+
   return (
     <View style={styles.container}>
-      <View style={styles.imageContainer}>
+      <View ref={imageRef} style={styles.imageContainer}>
         <ImageViewer
           imgSource={selectedImage || PlaceholderImage}
         ></ImageViewer>
