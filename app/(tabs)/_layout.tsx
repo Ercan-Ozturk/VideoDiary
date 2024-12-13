@@ -17,7 +17,7 @@ export default function TabsLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="Videos"
         options={{
           headerTitle: "Video Diary",
           tabBarIcon: ({ color, focused }) => (
@@ -30,7 +30,7 @@ export default function TabsLayout() {
         }}
       ></Tabs.Screen>
       <Tabs.Screen
-        name="about"
+        name="Details"
         options={{
           headerTitle: "About",
           tabBarIcon: ({ color, focused }) => (
