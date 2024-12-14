@@ -15,6 +15,8 @@ import {
   createVideoPlayer,
   useVideoPlayer,
 } from "expo-video";
+
+import Video, { VideoRef } from "react-native-video";
 import * as MediaLibrary from "expo-media-library";
 import { captureRef } from "react-native-view-shot";
 import { DomToImage } from "dom-to-image";
@@ -28,7 +30,7 @@ export default function Index() {
   const [videoSource, setVideoSource] = useState<VideoSource>(
     "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
   );
-
+  const [assetId, setAssetId] = useState(require("@/assets/videos/bo6.mp4"));
   const [showAppOptions, setShowAppOptions] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [pickedEmoji, setPickedEmoji] = useState<ImageSource | undefined>(
@@ -36,6 +38,8 @@ export default function Index() {
   );
   const [status, requestPermission] = MediaLibrary.usePermissions();
   const imageRef = useRef<View>(null);
+
+  const videoRef = useRef<VideoRef>(null);
 
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -46,7 +50,8 @@ export default function Index() {
 
     if (!result.canceled) {
       //setSelectedImage(result.assets[0].uri);
-      setVideoSource(result.assets[0].assetId || result.assets[0].uri);
+      setVideoSource(result.assets[0].uri);
+      //setAssetId(result.assets[0].assetId);
       console.log(videoSource);
       setShowAppOptions(true);
       //console.log(result);
@@ -116,6 +121,7 @@ export default function Index() {
           allowsFullscreen
           allowsPictureInPicture
         />
+
         {pickedEmoji && (
           <EmojiSticker imageSize={40} stickerSource={pickedEmoji} />
         )}
@@ -178,5 +184,12 @@ const styles = StyleSheet.create({
   video: {
     width: 350,
     height: 275,
+  },
+  backgroundVideo: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
   },
 });
