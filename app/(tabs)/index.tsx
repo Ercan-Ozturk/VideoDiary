@@ -9,7 +9,12 @@ import EmojiPicker from "@/components/EmojiPicker";
 import EmojiList from "@/components/EmojiList";
 import EmojiSticker from "@/components/EmojiSticker";
 import { ImageSource } from "expo-image";
-import { VideoSource, VideoView, useVideoPlayer } from "expo-video";
+import {
+  VideoSource,
+  VideoView,
+  createVideoPlayer,
+  useVideoPlayer,
+} from "expo-video";
 import * as MediaLibrary from "expo-media-library";
 import { captureRef } from "react-native-view-shot";
 import { DomToImage } from "dom-to-image";
@@ -20,6 +25,10 @@ export default function Index() {
   const [selectedImage, setSelectedImage] = useState<string | undefined>(
     undefined
   );
+  const [videoSource, setVideoSource] = useState<VideoSource>(
+    "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+  );
+
   const [showAppOptions, setShowAppOptions] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [pickedEmoji, setPickedEmoji] = useState<ImageSource | undefined>(
@@ -36,9 +45,11 @@ export default function Index() {
     });
 
     if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri);
+      //setSelectedImage(result.assets[0].uri);
+      setVideoSource(result.assets[0].assetId || result.assets[0].uri);
+      console.log(videoSource);
       setShowAppOptions(true);
-      console.log(result);
+      //console.log(result);
     } else {
       alert("You did not select any image.");
     }
@@ -89,16 +100,9 @@ export default function Index() {
       }
     }
   };
-
-  const videoSource =
-    "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
   const player = useVideoPlayer(videoSource, (player) => {
     player.loop = true;
     player.play();
-  });
-
-  const { isPlaying } = useEvent(player, "playingChange", {
-    isPlaying: player.playing,
   });
   return (
     <View style={styles.container}>
