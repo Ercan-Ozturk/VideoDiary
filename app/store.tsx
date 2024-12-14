@@ -1,21 +1,33 @@
 import { create } from "zustand";
 
-type Store = {
-  count: number;
-  inc: () => void;
-};
-
-const useStore = create<Store>()((set) => ({
-  count: 1,
-  inc: () => set((state) => ({ count: state.count + 1 })),
-}));
-
-function Counter() {
-  const { count, inc } = useStore();
-  return (
-    <div>
-      <span>{count}</span>
-      <button onClick={inc}>one up</button>
-    </div>
-  );
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  address: { city: string };
 }
+
+interface UserStore {
+  users: User[];
+  loading: boolean;
+  error: string | null;
+  fetchUsers: () => Promise<void>;
+}
+
+export const useUserStore = create<UserStore>((set) => ({
+  users: [],
+  loading: false,
+  error: null,
+  fetchUsers: async () => {
+    set({ loading: true });
+    try {
+      const response = await fetch(
+        "https://jsonplaceholder.typicode.com/users"
+      );
+      const data = await response.json();
+      set({ users: data, loading: false });
+    } catch (error) {
+      set({ error: "Failed to fetch users", loading: false });
+    }
+  },
+}));

@@ -9,9 +9,11 @@ import EmojiPicker from "@/components/EmojiPicker";
 import EmojiList from "@/components/EmojiList";
 import EmojiSticker from "@/components/EmojiSticker";
 import { ImageSource } from "expo-image";
+import { VideoSource, VideoView, useVideoPlayer } from "expo-video";
 import * as MediaLibrary from "expo-media-library";
 import { captureRef } from "react-native-view-shot";
 import { DomToImage } from "dom-to-image";
+import { useEvent } from "expo";
 
 const PlaceholderImage = require("@/assets/images/background-image.png");
 export default function Index() {
@@ -28,7 +30,7 @@ export default function Index() {
 
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ["images"],
+      mediaTypes: ["images", "videos"],
       allowsEditing: true,
       quality: 1,
     });
@@ -88,12 +90,28 @@ export default function Index() {
     }
   };
 
+  const videoSource =
+    "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+  const player = useVideoPlayer(videoSource, (player) => {
+    player.loop = true;
+    player.play();
+  });
+
+  const { isPlaying } = useEvent(player, "playingChange", {
+    isPlaying: player.playing,
+  });
   return (
     <View style={styles.container}>
       <View ref={imageRef} style={styles.imageContainer}>
         <ImageViewer
           imgSource={selectedImage || PlaceholderImage}
         ></ImageViewer>
+        <VideoView
+          style={styles.video}
+          player={player}
+          allowsFullscreen
+          allowsPictureInPicture
+        />
         {pickedEmoji && (
           <EmojiSticker imageSize={40} stickerSource={pickedEmoji} />
         )}
@@ -152,5 +170,9 @@ const styles = StyleSheet.create({
   optionsRow: {
     alignItems: "center",
     flexDirection: "row",
+  },
+  video: {
+    width: 350,
+    height: 275,
   },
 });

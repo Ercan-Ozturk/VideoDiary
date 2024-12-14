@@ -1,18 +1,16 @@
 import { View, StyleSheet, Platform, FlatList } from "react-native";
-import ImageViewer from "@/components/ImageViewer";
-import Button from "@/components/Button";
+
 import * as ImagePicker from "expo-image-picker";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import IconButton from "@/components/IconButton";
 import CircleButton from "@/components/CircleButton";
-import EmojiPicker from "@/components/EmojiPicker";
-import EmojiList from "@/components/EmojiList";
-import EmojiSticker from "@/components/EmojiSticker";
 import { ImageSource } from "expo-image";
 import * as MediaLibrary from "expo-media-library";
 import { captureRef } from "react-native-view-shot";
 import { DomToImage } from "dom-to-image";
 import { Text } from "react-native";
+import UserList from "@/components/UserList";
+import * as SQLite from "expo-sqlite";
 
 const PlaceholderImage = require("@/assets/images/background-image.png");
 export default function Main() {
@@ -110,6 +108,11 @@ export default function Main() {
       <Text style={styles.title}>{title}</Text>
     </View>
   );
+
+  //Database
+  /*   const db = SQLite.openDatabaseSync("VideoDiary.db");
+  const [isLoading, setisLoading] = useState<boolean>(true);
+  const [names, setNames] = useState([]); */
   return (
     <View style={styles.container}>
       <FlatList
@@ -117,42 +120,7 @@ export default function Main() {
         renderItem={({ item }) => <Item title={item.title} />}
         keyExtractor={(item) => item.id}
       />
-      <View ref={imageRef} style={styles.imageContainer}>
-        <ImageViewer
-          imgSource={selectedImage || PlaceholderImage}
-        ></ImageViewer>
-        {pickedEmoji && (
-          <EmojiSticker imageSize={40} stickerSource={pickedEmoji} />
-        )}
-      </View>
-      {showAppOptions ? (
-        <View style={styles.optionsContainer}>
-          <View style={styles.optionsRow}>
-            <IconButton icon="refresh" label="Reset" onPress={onReset} />
-            <CircleButton onPress={onAddSticker} />
-            <IconButton
-              icon="save-alt"
-              label="Save"
-              onPress={onSaveImageAsync}
-            />
-          </View>
-        </View>
-      ) : (
-        <View style={styles.footerContainer}>
-          <Button
-            label="Choose a photo"
-            theme="primary"
-            onPress={pickImageAsync}
-          ></Button>
-          <Button
-            label="Use this photo"
-            onPress={() => setShowAppOptions(true)}
-          ></Button>
-        </View>
-      )}
-      <EmojiPicker isVisible={isModalVisible} onClose={onModalClose}>
-        <EmojiList onSelect={setPickedEmoji} onCloseModal={onModalClose} />
-      </EmojiPicker>
+      <UserList></UserList>
     </View>
   );
 }
