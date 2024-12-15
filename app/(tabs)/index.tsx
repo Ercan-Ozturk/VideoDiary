@@ -77,7 +77,13 @@ export default function Index() {
       // saving error
     }
   };
-
+  const setData = async (value: string) => {
+    try {
+      await AsyncStorage.setItem("my-key", value);
+    } catch (e) {
+      // saving error
+    }
+  };
   const getData = async (name: string) => {
     try {
       const jsonValue = await AsyncStorage.getItem(name);
@@ -92,8 +98,9 @@ export default function Index() {
       name: text,
       description: description,
     };
-    storeData(v);
-    console.log(getData(text));
+    //storeData(v);
+    setData(description);
+    //console.log(getData(text));
   };
   const player = useVideoPlayer(videoSource, (player) => {
     player.loop = true;

@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEvent } from "expo";
 import { useVideoPlayer, VideoView } from "expo-video";
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View, Button } from "react-native";
 import { Text } from "react-native";
 
@@ -17,20 +17,37 @@ export default function VideoScreen() {
   const { isPlaying } = useEvent(player, "playingChange", {
     isPlaying: player.playing,
   });
+  const [data, setData] = useState<string>("");
   const getData = async (name: string) => {
     try {
       const jsonValue = await AsyncStorage.getItem(name);
+      setData(JSON.parse(jsonValue || ""));
       return jsonValue != null ? JSON.parse(jsonValue) : null;
     } catch (e) {
       // error reading value
     }
   };
-  const v = getData("test");
+
+  const getDataStr = async () => {
+    try {
+      const value = await AsyncStorage.getItem("my-key");
+      if (value !== null) {
+        // value previously stored
+        setData(value);
+      }
+    } catch (e) {
+      // error reading value
+    }
+  };
+  type VideoProps = { uri: string; name: string; description: string };
+
+  //getData("test");
+  getDataStr();
   return (
     <>
       <View style={styles.container}>
         <Text>Name</Text>
-        <Text>{JSON.stringify(v)}</Text>
+        <Text>{data}</Text>
         <Text>Description</Text>
       </View>
 
