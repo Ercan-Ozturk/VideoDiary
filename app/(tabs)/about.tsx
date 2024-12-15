@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEvent } from "expo";
 import { useVideoPlayer, VideoView } from "expo-video";
 import React from "react";
@@ -16,11 +17,20 @@ export default function VideoScreen() {
   const { isPlaying } = useEvent(player, "playingChange", {
     isPlaying: player.playing,
   });
-
+  const getData = async (name: string) => {
+    try {
+      const jsonValue = await AsyncStorage.getItem(name);
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (e) {
+      // error reading value
+    }
+  };
+  const v = getData("test");
   return (
     <>
       <View style={styles.container}>
         <Text>Name</Text>
+        <Text>{JSON.stringify(v)}</Text>
         <Text>Description</Text>
       </View>
 
