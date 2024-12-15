@@ -9,15 +9,8 @@ const videoSource =
   "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
 
 export default function VideoScreen() {
-  const player = useVideoPlayer(videoSource, (player) => {
-    player.loop = true;
-    player.play();
-  });
-
-  const { isPlaying } = useEvent(player, "playingChange", {
-    isPlaying: player.playing,
-  });
   const [data, setData] = useState<string>("");
+  const [videoData, setVideoData] = useState<string>("");
   const getData = async (name: string) => {
     try {
       const jsonValue = await AsyncStorage.getItem(name);
@@ -31,9 +24,11 @@ export default function VideoScreen() {
   const getDataStr = async () => {
     try {
       const value = await AsyncStorage.getItem("my-key");
-      if (value !== null) {
+      const v2 = await AsyncStorage.getItem("my-key" + "uri");
+      if (value !== null && v2 != null) {
         // value previously stored
         setData(value);
+        setVideoData(v2);
       }
     } catch (e) {
       // error reading value
@@ -43,6 +38,14 @@ export default function VideoScreen() {
 
   //getData("test");
   getDataStr();
+
+  const player = useVideoPlayer(videoData, (player) => {
+    player.loop = true;
+    player.play();
+  });
+  const { isPlaying } = useEvent(player, "playingChange", {
+    isPlaying: player.playing,
+  });
   return (
     <>
       <View style={styles.container}>
