@@ -1,4 +1,4 @@
-import { View, StyleSheet, Platform } from "react-native";
+import { View, StyleSheet, Platform, TextInput } from "react-native";
 import ImageViewer from "@/components/ImageViewer";
 import Button from "@/components/Button";
 import * as ImagePicker from "expo-image-picker";
@@ -21,6 +21,7 @@ import * as MediaLibrary from "expo-media-library";
 import { captureRef } from "react-native-view-shot";
 import { DomToImage } from "dom-to-image";
 import { useEvent } from "expo";
+import React from "react";
 
 const PlaceholderImage = require("@/assets/images/background-image.png");
 export default function Index() {
@@ -72,6 +73,8 @@ export default function Index() {
   const onModalClose = () => {
     setIsModalVisible(false);
   };
+
+  // TODO:
   const onSaveImageAsync = async () => {
     if (Platform.OS !== "web") {
       try {
@@ -109,12 +112,15 @@ export default function Index() {
     player.loop = true;
     player.play();
   });
+
+  const [text, onChangeText] = useState("");
+  const [description, onChangeDescription] = useState("");
   return (
     <View style={styles.container}>
       <View ref={imageRef} style={styles.imageContainer}>
-        <ImageViewer
+        {/*         <ImageViewer
           imgSource={selectedImage || PlaceholderImage}
-        ></ImageViewer>
+        ></ImageViewer> */}
         <VideoView
           style={styles.video}
           player={player}
@@ -126,6 +132,7 @@ export default function Index() {
           <EmojiSticker imageSize={40} stickerSource={pickedEmoji} />
         )}
       </View>
+
       {showAppOptions ? (
         <View style={styles.optionsContainer}>
           <View style={styles.optionsRow}>
@@ -139,17 +146,56 @@ export default function Index() {
           </View>
         </View>
       ) : (
-        <View style={styles.footerContainer}>
-          <Button
-            label="Choose a photo"
-            theme="primary"
-            onPress={pickImageAsync}
-          ></Button>
-          <Button
-            label="Use this photo"
-            onPress={() => setShowAppOptions(true)}
-          ></Button>
-        </View>
+        <>
+          <View
+            style={[
+              styles.textContainer,
+              {
+                borderWidth: 2,
+                borderColor: "#ffd33d",
+                borderRadius: 18,
+                backgroundColor: "#fff",
+              },
+            ]}
+          >
+            <TextInput
+              style={styles.input}
+              onChangeText={(newText) => onChangeText(newText)}
+              placeholder="Name"
+              value={text}
+            />
+          </View>
+
+          <View
+            style={[
+              styles.textContainer,
+              {
+                borderWidth: 2,
+                borderColor: "#ffd33d",
+                borderRadius: 18,
+                backgroundColor: "#fff",
+              },
+            ]}
+          >
+            <TextInput
+              style={styles.input}
+              onChangeText={(newText) => onChangeDescription(newText)}
+              value={description}
+              placeholder="Description"
+            />
+          </View>
+          <View style={styles.footerContainer}>
+            <Button
+              label="Choose a video"
+              theme="primary"
+              onPress={pickImageAsync}
+            ></Button>
+            <Button
+              label="Use this video"
+              onPress={() => setShowAppOptions(true)}
+            ></Button>
+          </View>
+        </>
       )}
       <EmojiPicker isVisible={isModalVisible} onClose={onModalClose}>
         <EmojiList onSelect={setPickedEmoji} onCloseModal={onModalClose} />
@@ -191,5 +237,19 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     right: 0,
+  },
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+  },
+  textContainer: {
+    width: 200,
+    height: 60,
+    marginHorizontal: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 3,
   },
 });
