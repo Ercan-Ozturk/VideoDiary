@@ -21,10 +21,10 @@ export default function VideoScreen() {
     }
   };
 
-  const getDataStr = async () => {
+  const getDataStr = async (name: string) => {
     try {
-      const value = await AsyncStorage.getItem("my-key");
-      const v2 = await AsyncStorage.getItem("my-key" + "uri");
+      const value = await AsyncStorage.getItem(name);
+      const v2 = await AsyncStorage.getItem(name + "uri");
       if (value !== null && v2 != null) {
         // value previously stored
         setData(value);
@@ -37,7 +37,7 @@ export default function VideoScreen() {
   type VideoProps = { uri: string; name: string; description: string };
 
   //getData("test");
-  getDataStr();
+  getDataStr("test3");
 
   const player = useVideoPlayer(videoData, (player) => {
     player.loop = true;
@@ -52,6 +52,7 @@ export default function VideoScreen() {
         <Text>Name</Text>
         <Text>{data}</Text>
         <Text>Description</Text>
+        <Text>{videoData}</Text>
       </View>
 
       <View style={styles.contentContainer}>

@@ -77,10 +77,10 @@ export default function Index() {
       // saving error
     }
   };
-  const setData = async (value: string, v2: string) => {
+  const setData = async (name: string, desc: string, v2: string) => {
     try {
-      await AsyncStorage.setItem("my-key", value);
-      await AsyncStorage.setItem("my-key" + "uri", value);
+      await AsyncStorage.setItem(name, desc);
+      await AsyncStorage.setItem(name + "uri", v2);
     } catch (e) {
       // saving error
     }
@@ -100,7 +100,7 @@ export default function Index() {
       description: description,
     };
     //storeData(v);
-    setData(description, videoSource as string);
+    setData(v.name, v.description, v.uri);
     //console.log(getData(text));
   };
   const player = useVideoPlayer(videoSource, (player) => {
