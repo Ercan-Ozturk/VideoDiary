@@ -1,4 +1,4 @@
-import { View, StyleSheet, Platform, FlatList } from "react-native";
+import { View, StyleSheet, Platform, FlatList, TextInput } from "react-native";
 
 import * as ImagePicker from "expo-image-picker";
 import { useRef, useState, useEffect } from "react";
@@ -10,6 +10,9 @@ import * as MediaLibrary from "expo-media-library";
 import { Text } from "react-native";
 import UserList from "@/components/UserList";
 import * as SQLite from "expo-sqlite";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Button from "@/components/Button";
+import { Link, router } from "expo-router";
 
 const PlaceholderImage = require("@/assets/images/background-image.png");
 export default function Main() {
@@ -21,6 +24,7 @@ export default function Main() {
   const [pickedEmoji, setPickedEmoji] = useState<ImageSource | undefined>(
     undefined
   );
+  const [list, setList] = useState<string | undefined>(undefined);
   const [status, requestPermission] = MediaLibrary.usePermissions();
   const imageRef = useRef<View>(null);
 
@@ -45,7 +49,18 @@ export default function Main() {
       <Text style={styles.title}>{title}</Text>
     </View>
   );
+  const fetchAllItems = async () => {
+    try {
+      const keys = await AsyncStorage.getAllKeys();
+      const items = await AsyncStorage.multiGet(keys);
 
+      return items != null ? JSON.parse(JSON.stringify(items)) : null;
+    } catch (error) {
+      console.log(error, "problem");
+    }
+  };
+  console.log(fetchAllItems());
+  const [text, onChangeText] = useState("");
   return (
     <View style={styles.container}>
       <FlatList
@@ -53,7 +68,23 @@ export default function Main() {
         renderItem={({ item }) => <Item title={item.title} />}
         keyExtractor={(item) => item.id}
       />
-      <UserList></UserList>
+      {/*       <UserList></UserList> */}
+      <TextInput
+        style={styles.input}
+        onChangeText={(newText) => onChangeText(newText)}
+        placeholder="Name"
+        value={text}
+      />
+
+      <Button
+        label="Go the video"
+        onPress={() => {
+          router.push({
+            pathname: `/about`,
+            params: { about: text },
+          });
+        }}
+      ></Button>
     </View>
   );
 }
@@ -89,5 +120,11 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
+  },
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
   },
 });

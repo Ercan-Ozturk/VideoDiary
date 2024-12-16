@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEvent } from "expo";
+import { useLocalSearchParams } from "expo-router";
 import { useVideoPlayer, VideoView } from "expo-video";
 import React, { useState } from "react";
 import { StyleSheet, View, Button } from "react-native";
@@ -37,7 +38,9 @@ export default function VideoScreen() {
   type VideoProps = { uri: string; name: string; description: string };
 
   //getData("test");
-  getDataStr("test3");
+  const { about } = useLocalSearchParams<{ about: string }>();
+  console.log(about);
+  getDataStr(about);
 
   const player = useVideoPlayer(videoData, (player) => {
     player.loop = true;
@@ -50,9 +53,9 @@ export default function VideoScreen() {
     <>
       <View style={styles.container}>
         <Text>Name</Text>
-        <Text>{data}</Text>
+        <Text>{about}</Text>
         <Text>Description</Text>
-        <Text>{videoData}</Text>
+        <Text>{data}</Text>
       </View>
 
       <View style={styles.contentContainer}>

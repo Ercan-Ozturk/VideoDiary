@@ -94,14 +94,18 @@ export default function Index() {
     }
   };
   const onSaveVideoAsync = async () => {
-    const v: VideoProps = {
-      uri: videoSource as string,
-      name: text,
-      description: description,
-    };
-    //storeData(v);
-    setData(v.name, v.description, v.uri);
-    //console.log(getData(text));
+    if (text == "" || description == "") {
+      alert("Please fill the name and description.");
+    } else {
+      const v: VideoProps = {
+        uri: videoSource as string,
+        name: text,
+        description: description,
+      };
+      //storeData(v);
+      setData(v.name, v.description, v.uri);
+      //console.log(getData(text));
+    }
   };
   const player = useVideoPlayer(videoSource, (player) => {
     player.loop = true;
@@ -185,6 +189,7 @@ export default function Index() {
               theme="primary"
               onPress={pickImageAsync}
             ></Button>
+
             <Button
               label="Use this video"
               onPress={() => setShowAppOptions(true)}
