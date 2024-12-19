@@ -5,6 +5,7 @@ import { useVideoPlayer, VideoView } from "expo-video";
 import React, { useState } from "react";
 import { StyleSheet, View, Button } from "react-native";
 import { Text } from "react-native";
+import "@/app/global.css";
 
 const videoSource =
   "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
@@ -52,7 +53,7 @@ export default function VideoScreen() {
   return (
     <>
       <View style={styles.container}>
-        <Text>Name</Text>
+        <Text className="text-2xl font-bold">Name</Text>
         <Text>{about}</Text>
         <Text>Description</Text>
         <Text>{data}</Text>

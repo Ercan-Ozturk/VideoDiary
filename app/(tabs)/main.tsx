@@ -1,33 +1,14 @@
-import { View, StyleSheet, Platform, FlatList, TextInput } from "react-native";
+import { View, StyleSheet, FlatList, TextInput } from "react-native";
 
-import * as ImagePicker from "expo-image-picker";
-import { useRef, useState, useEffect } from "react";
-import IconButton from "@/components/IconButton";
-import CircleButton from "@/components/CircleButton";
-import { ImageSource } from "expo-image";
-import * as MediaLibrary from "expo-media-library";
+import { useState } from "react";
 
 import { Text } from "react-native";
-import UserList from "@/components/UserList";
-import * as SQLite from "expo-sqlite";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Button from "@/components/Button";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 
 const PlaceholderImage = require("@/assets/images/background-image.png");
 export default function Main() {
-  const [selectedImage, setSelectedImage] = useState<string | undefined>(
-    undefined
-  );
-  const [showAppOptions, setShowAppOptions] = useState<boolean>(false);
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const [pickedEmoji, setPickedEmoji] = useState<ImageSource | undefined>(
-    undefined
-  );
-  const [list, setList] = useState<string | undefined>(undefined);
-  const [status, requestPermission] = MediaLibrary.usePermissions();
-  const imageRef = useRef<View>(null);
-
   const DATA = [
     {
       id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",

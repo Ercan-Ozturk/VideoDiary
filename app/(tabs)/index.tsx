@@ -9,7 +9,7 @@ import EmojiList from "@/components/EmojiList";
 import EmojiSticker from "@/components/EmojiSticker";
 import { ImageSource } from "expo-image";
 import { VideoSource, VideoView, useVideoPlayer } from "expo-video";
-
+import "@/app/global.css";
 import { VideoRef } from "react-native-video";
 import * as MediaLibrary from "expo-media-library";
 import React from "react";
