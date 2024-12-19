@@ -14,7 +14,10 @@ import { VideoRef } from "react-native-video";
 import * as MediaLibrary from "expo-media-library";
 import React from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import VideoSlider from "@/components/VideoSlider";
+
 const PlaceholderImage = require("@/assets/images/background-image.png");
+
 export default function Index() {
   const [selectedImage, setSelectedImage] = useState<string | undefined>(
     undefined
@@ -114,6 +117,9 @@ export default function Index() {
 
   const [text, onChangeText] = useState("");
   const [description, onChangeDescription] = useState("");
+  const [slideStartingValue, setSlideStartingValue] = useState(0);
+  const [slideStartingCount, setSlideStartingCount] = useState(0);
+
   return (
     <View style={styles.container}>
       <View ref={imageRef} style={styles.imageContainer}>
@@ -133,7 +139,22 @@ export default function Index() {
       </View>
 
       {showAppOptions ? (
-        <View style={styles.optionsContainer}>
+        <View style={styles.container}>
+          <View style={styles.textContainer}>
+            Select the start time for crop
+          </View>
+          <VideoSlider
+            style={{ width: 200, height: 40, alignContent: "center" }}
+            minimumValue={0}
+            maximumValue={player.duration}
+            minimumTrackTintColor="#FFFFFF"
+            maximumTrackTintColor="#000000"
+          />
+          <IconButton
+            icon="crop"
+            label="Crop"
+            onPress={onAddSticker}
+          ></IconButton>
           <View style={styles.optionsRow}>
             <IconButton icon="refresh" label="Reset" onPress={onReset} />
             <CircleButton onPress={onAddSticker} />
@@ -160,6 +181,10 @@ export default function Index() {
               style={(styles.input, { padding: 3 })}
               onChangeText={(newText) => onChangeDescription(newText)}
               value={description}
+              editable
+              multiline
+              numberOfLines={4}
+              maxLength={40}
               placeholder="Description"
             />
           </View>
@@ -231,14 +256,13 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     width: 200,
-    height: 60,
-    marginHorizontal: 20,
     alignItems: "center",
     justifyContent: "center",
-    padding: 3,
+    padding: 6,
     borderWidth: 2,
     borderColor: "#ffd33d",
     borderRadius: 18,
     backgroundColor: "#fff",
+    marginVertical: 6,
   },
 });
