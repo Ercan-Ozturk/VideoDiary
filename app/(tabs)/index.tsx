@@ -146,38 +146,18 @@ export default function Index() {
         </View>
       ) : (
         <>
-          <View
-            style={[
-              styles.textContainer,
-              {
-                borderWidth: 2,
-                borderColor: "#ffd33d",
-                borderRadius: 18,
-                backgroundColor: "#fff",
-              },
-            ]}
-          >
+          <View style={[styles.textContainer]}>
             <TextInput
-              style={styles.input}
+              style={(styles.input, { padding: 4 })}
               onChangeText={(newText) => onChangeText(newText)}
               placeholder="Name"
               value={text}
             />
           </View>
 
-          <View
-            style={[
-              styles.textContainer,
-              {
-                borderWidth: 2,
-                borderColor: "#ffd33d",
-                borderRadius: 18,
-                backgroundColor: "#fff",
-              },
-            ]}
-          >
+          <View style={[styles.textContainer]}>
             <TextInput
-              style={styles.input}
+              style={(styles.input, { padding: 3 })}
               onChangeText={(newText) => onChangeDescription(newText)}
               value={description}
               placeholder="Description"
@@ -208,11 +188,15 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#25292e",
     flex: 1,
-
+    flexDirection: "column",
+    flexWrap: "wrap",
     alignItems: "center",
   },
 
   imageContainer: {
+    alignContent: "center",
+    alignItems: "center",
+    verticalAlign: "middle",
     flex: 1,
   },
   footerContainer: {
@@ -230,6 +214,7 @@ const styles = StyleSheet.create({
   video: {
     width: 350,
     height: 275,
+    verticalAlign: "middle",
   },
   backgroundVideo: {
     position: "absolute",
@@ -251,5 +236,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 3,
+    borderWidth: 2,
+    borderColor: "#ffd33d",
+    borderRadius: 18,
+    backgroundColor: "#fff",
   },
 });

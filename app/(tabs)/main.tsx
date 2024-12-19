@@ -50,22 +50,25 @@ export default function Main() {
         keyExtractor={(item) => item.id}
       />
       {/*       <UserList></UserList> */}
-      <TextInput
-        style={styles.input}
-        onChangeText={(newText) => onChangeText(newText)}
-        placeholder="Name"
-        value={text}
-      />
+      <View style={styles.footerContainer}>
+        <View style={styles.textContainer}>
+          <TextInput
+            onChangeText={(newText) => onChangeText(newText)}
+            placeholder="Name"
+            value={text}
+          />
+        </View>
 
-      <Button
-        label="Go the video"
-        onPress={() => {
-          router.push({
-            pathname: `/about`,
-            params: { about: text },
-          });
-        }}
-      ></Button>
+        <Button
+          label="Go the video"
+          onPress={() => {
+            router.push({
+              pathname: `/about`,
+              params: { about: text },
+            });
+          }}
+        ></Button>
+      </View>
     </View>
   );
 }
@@ -82,7 +85,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   footerContainer: {
-    flex: 1 / 3,
+    flex: 1 / 2,
     alignItems: "center",
   },
   optionsContainer: {
@@ -107,5 +110,16 @@ const styles = StyleSheet.create({
     margin: 12,
     borderWidth: 1,
     padding: 10,
+  },
+  textContainer: {
+    width: 200,
+    height: 60,
+    marginHorizontal: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 2,
+    borderColor: "#ffd33d",
+    borderRadius: 18,
+    backgroundColor: "#fff",
   },
 });
