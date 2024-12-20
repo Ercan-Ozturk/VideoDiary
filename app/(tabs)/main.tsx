@@ -1,4 +1,4 @@
-import { View, StyleSheet, FlatList, TextInput } from "react-native";
+import { View, StyleSheet, FlatList, TextInput, Pressable } from "react-native";
 
 import { useEffect, useState } from "react";
 
@@ -6,8 +6,15 @@ import { Text } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Button from "@/components/Button";
 import { router } from "expo-router";
+import { useVideoStore } from "../store";
 
 export default function Main() {
+  /*   const store = useVideoStore();
+  store.addVideo(); */
+  //store.addVideo("test", "test", "test");
+  const store = useVideoStore();
+  console.log(store);
+
   const DATA = [
     {
       id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
@@ -43,20 +50,7 @@ export default function Main() {
       console.log(error, "problem");
     }
   };
-  const [items, setItems] = useState("");
-  useEffect(() => {
-    fetchAllItems().then((val) => {
-      console.log(val);
-      setItems(val);
-    });
-  });
-  useEffect(() => {
-    fetchAllItems().then((val) => {
-      console.log(val);
-      setItems(val);
-    });
-    return () => {};
-  }, [items]);
+
   const [text, onChangeText] = useState("");
   return (
     <View style={styles.container}>

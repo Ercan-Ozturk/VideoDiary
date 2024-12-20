@@ -33,35 +33,36 @@ export const useUserStore = create<UserStore>((set) => ({
   },
 }));
 interface Video {
-  id: number;
   name: string;
   description: string;
   uri: string;
 }
 type VideoStore = {
   videos: Video[];
-
-  name: string;
+  video_name: string;
   description: string;
-  addVideo: () => void;
 };
 
 export const useVideoStore = create<VideoStore>()(
   persist(
     (set) => ({
       videos: [],
-      name: "red",
-      description: "big",
-      addVideo: () => set({}),
+      video_name: "test",
+      description: "test description",
     }),
     {
       name: "video store",
-      partialize: (state) =>
-        Object.fromEntries(
-          Object.entries(state).filter(
-            ([key]) => !["name", "description"].includes(key)
-          )
-        ),
+      storage: createJSONStorage(() => sessionStorage),
+      /*       partialize: (state) => ({
+        video_name: state.video_name,
+        description: state.description,
+      }), */
     }
   )
 );
+const initialVideoStoreValue = {
+  videoInfo: new Map<string, string>([
+    ["Tom", "happy"],
+    ["Mary", "smart"],
+  ]),
+};
