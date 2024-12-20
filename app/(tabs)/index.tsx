@@ -68,6 +68,8 @@ export default function Index() {
     setIsModalVisible(false);
   };
   const cropvideo = () => {
+    alert("Crop");
+    return;
     let filePath = videoSource as string;
     FFmpegKit.execute(`-i ${filePath}-c:v mpeg4 ${filePath}_output.mp4`).then(
       async (session) => {
@@ -124,6 +126,7 @@ export default function Index() {
       };
       //storeData(v);
       setData(v.name, v.description, v.uri);
+      alert("Saved");
       //console.log(getData(text));
     }
   };

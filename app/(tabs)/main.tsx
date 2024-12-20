@@ -1,7 +1,7 @@
 import { View, StyleSheet, FlatList, TextInput, Pressable } from "react-native";
 
 import { useEffect, useState } from "react";
-
+import React from "react";
 import { Text } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Button from "@/components/Button";
@@ -11,7 +11,7 @@ import { useVideoStore } from "../store";
 export default function Main() {
   // const store = useVideoStore();
   // console.log(store);
-
+  const [vals, setVals] = useState<string | undefined>(undefined);
   const DATA = [
     {
       id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
@@ -26,6 +26,18 @@ export default function Main() {
       title: "Third Item",
     },
   ];
+  const getAllKeys = async () => {
+    try {
+      const keys = await AsyncStorage.getAllKeys();
+      return keys;
+    } catch (e) {
+      // read key error
+    }
+
+    // example console.log result:
+    // ['@MyApp_user', '@MyApp_key']
+  };
+
   type ItemProps = { title: string };
   type VideoProps = { uri: string; name: string; description: string };
   const [video, setVideo] = useState<VideoProps>();
@@ -39,6 +51,7 @@ export default function Main() {
       <Text style={styles.title}>{name}</Text>
     </View>
   );
+  let vids = new Map<string, VideoProps>();
   const fetchAllItems = async () => {
     try {
       const result: any = {};
@@ -60,11 +73,16 @@ export default function Main() {
       // error reading value
     }
   };
-  fetchAllItems().then((val) => {});
+
+  fetchAllItems().then((val) => {
+    console.log(val);
+    setVals(JSON.stringify(val));
+  });
 
   const [text, onChangeText] = useState("");
   return (
     <View style={styles.container}>
+      <View style={styles.textContainerLong}>{vals}</View>
       <FlatList
         data={DATA}
         renderItem={({ item }) => <Item title={item.title} />}
@@ -136,6 +154,15 @@ const styles = StyleSheet.create({
     width: 200,
     height: 60,
     marginHorizontal: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 2,
+    borderColor: "#ffd33d",
+    borderRadius: 18,
+    backgroundColor: "#fff",
+  },
+  textContainerLong: {
+    fontSize: 11,
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 2,
