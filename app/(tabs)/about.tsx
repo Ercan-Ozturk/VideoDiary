@@ -7,17 +7,21 @@ import { StyleSheet, View, Button } from "react-native";
 import { Text } from "react-native";
 import "../global.css";
 import { verifyInstallation } from "nativewind";
+
 const videoSource =
   "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
-
+type VideoProps = { uri: string; name: string; description: string };
 export default function VideoScreen() {
   const [data, setData] = useState<string>("");
   const [videoData, setVideoData] = useState<string>("");
+  const [videoObject, setVideoObjectData] = useState<VideoProps>();
   const getData = async (name: string) => {
     try {
       const jsonValue = await AsyncStorage.getItem(name);
-      setData(JSON.parse(jsonValue || ""));
-      return jsonValue != null ? JSON.parse(jsonValue) : null;
+
+      return jsonValue != null
+        ? setVideoObjectData(JSON.parse(jsonValue))
+        : null;
     } catch (e) {
       // error reading value
     }
@@ -36,12 +40,15 @@ export default function VideoScreen() {
       // error reading value
     }
   };
-  type VideoProps = { uri: string; name: string; description: string };
 
   //getData("test");
   const { about } = useLocalSearchParams<{ about: string }>();
   if (about != null) {
     getDataStr(about);
+    /* 
+    getData(about).then((val) => {
+      console.log(val);
+    }); */
   }
 
   const player = useVideoPlayer(videoData, (player) => {

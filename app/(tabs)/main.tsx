@@ -9,11 +9,8 @@ import { router } from "expo-router";
 import { useVideoStore } from "../store";
 
 export default function Main() {
-  /*   const store = useVideoStore();
-  store.addVideo(); */
-  //store.addVideo("test", "test", "test");
-  const store = useVideoStore();
-  console.log(store);
+  // const store = useVideoStore();
+  // console.log(store);
 
   const DATA = [
     {
@@ -30,13 +27,18 @@ export default function Main() {
     },
   ];
   type ItemProps = { title: string };
-
+  type VideoProps = { uri: string; name: string; description: string };
+  const [video, setVideo] = useState<VideoProps>();
   const Item = ({ title }: ItemProps) => (
     <View style={styles.item}>
       <Text style={styles.title}>{title}</Text>
     </View>
   );
-
+  const Video = ({ name }: VideoProps) => (
+    <View style={styles.item}>
+      <Text style={styles.title}>{name}</Text>
+    </View>
+  );
   const fetchAllItems = async () => {
     try {
       const result: any = {};
@@ -50,14 +52,15 @@ export default function Main() {
       console.log(error, "problem");
     }
   };
-  let videos = new Map<string, string>([
-    ["Tom", "happy"],
-    ["Mary", "smart"],
-  ]);
-  fetchAllItems().then((val) => {
-    console.log(val);
-    videos = val;
-  });
+  const getData = async (name: string) => {
+    try {
+      const jsonValue = await AsyncStorage.getItem(name);
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (e) {
+      // error reading value
+    }
+  };
+  fetchAllItems().then((val) => {});
 
   const [text, onChangeText] = useState("");
   return (

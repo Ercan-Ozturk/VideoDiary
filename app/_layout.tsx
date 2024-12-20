@@ -2,7 +2,7 @@ import { Stack } from "expo-router";
 import { LogBox } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import "./global.css";
+
 LogBox.ignoreAllLogs(true);
 
 export default function RootLayout() {
