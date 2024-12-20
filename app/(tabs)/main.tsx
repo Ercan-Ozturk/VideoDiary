@@ -50,6 +50,14 @@ export default function Main() {
       console.log(error, "problem");
     }
   };
+  let videos = new Map<string, string>([
+    ["Tom", "happy"],
+    ["Mary", "smart"],
+  ]);
+  fetchAllItems().then((val) => {
+    console.log(val);
+    videos = val;
+  });
 
   const [text, onChangeText] = useState("");
   return (
