@@ -2,17 +2,18 @@
 
 
 
-1. Install dependencies
+1. Clone the repository
+2. Install dependencies
 
    ```bash
    npm install
    ```
 
-2. Start the app
+3. Start the app
 
    ```bash
     npx expo start
    ```
 
-3. Other dependencies
+4. Other dependencies
    Google Chrome Version 131.0.6778.205 64 Bit
