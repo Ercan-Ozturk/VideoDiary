@@ -110,14 +110,13 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     width: 200,
-    height: 60,
-    marginHorizontal: 20,
     alignItems: "center",
     justifyContent: "center",
-    padding: 3,
+    padding: 6,
     borderWidth: 2,
     borderColor: "#ffd33d",
     borderRadius: 18,
     backgroundColor: "#fff",
+    marginVertical: 6,
   },
 });

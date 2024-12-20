@@ -1,13 +1,12 @@
 import { View, StyleSheet, FlatList, TextInput } from "react-native";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Text } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Button from "@/components/Button";
 import { router } from "expo-router";
 
-const PlaceholderImage = require("@/assets/images/background-image.png");
 export default function Main() {
   const DATA = [
     {
@@ -30,17 +29,34 @@ export default function Main() {
       <Text style={styles.title}>{title}</Text>
     </View>
   );
+
   const fetchAllItems = async () => {
     try {
+      const result: any = {};
       const keys = await AsyncStorage.getAllKeys();
-      const items = await AsyncStorage.multiGet(keys);
-
-      return items != null ? JSON.parse(JSON.stringify(items)) : null;
+      for (const key of keys) {
+        const val = await AsyncStorage.getItem(key);
+        result[key] = val;
+      }
+      return result;
     } catch (error) {
       console.log(error, "problem");
     }
   };
-  console.log(fetchAllItems());
+  const [items, setItems] = useState("");
+  useEffect(() => {
+    fetchAllItems().then((val) => {
+      console.log(val);
+      setItems(val);
+    });
+  });
+  useEffect(() => {
+    fetchAllItems().then((val) => {
+      console.log(val);
+      setItems(val);
+    });
+    return () => {};
+  }, [items]);
   const [text, onChangeText] = useState("");
   return (
     <View style={styles.container}>

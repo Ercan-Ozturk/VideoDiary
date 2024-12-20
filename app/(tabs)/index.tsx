@@ -15,7 +15,7 @@ import * as MediaLibrary from "expo-media-library";
 import React from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import VideoSlider from "@/components/VideoSlider";
-
+import { FFmpegKit, ReturnCode } from "ffmpeg-kit-react-native";
 const PlaceholderImage = require("@/assets/images/background-image.png");
 
 export default function Index() {
@@ -66,6 +66,23 @@ export default function Index() {
 
   const onModalClose = () => {
     setIsModalVisible(false);
+  };
+  const cropvideo = () => {
+    let filePath = videoSource as string;
+    FFmpegKit.execute(`-i ${filePath}-c:v mpeg4 ${filePath}_output.mp4`).then(
+      async (session) => {
+        const returnCode = await session.getReturnCode();
+
+        if (ReturnCode.isSuccess(returnCode)) {
+          // SUCCESS
+          alert("success");
+        } else if (ReturnCode.isCancel(returnCode)) {
+          // CANCEL
+        } else {
+          // ERROR
+        }
+      }
+    );
   };
 
   // TODO:
@@ -150,11 +167,7 @@ export default function Index() {
             minimumTrackTintColor="#FFFFFF"
             maximumTrackTintColor="#000000"
           />
-          <IconButton
-            icon="crop"
-            label="Crop"
-            onPress={onAddSticker}
-          ></IconButton>
+          <IconButton icon="crop" label="Crop" onPress={cropvideo}></IconButton>
           <View style={styles.optionsRow}>
             <IconButton icon="refresh" label="Reset" onPress={onReset} />
             <CircleButton onPress={onAddSticker} />
