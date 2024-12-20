@@ -13,12 +13,12 @@ interface Video {
   description: string;
   uri: string;
 }
-interface VideoStore {
+type VideoStore = {
   videos: Video[];
-  loading: boolean;
-  error: string | null;
-  fetchVideos: () => Promise<void>;
-}
+  //loading: boolean;
+  //error: string | null;
+  addVideo: () => void;
+};
 
 interface UserStore {
   users: User[];
@@ -44,33 +44,51 @@ export const useUserStore = create<UserStore>((set) => ({
     }
   },
 }));
+type TBearStoreState = {
+  bears: number;
+  color: string;
+  size: string;
+  increasePopulation: () => void;
+  removeAllBears: () => void;
+};
 
-export const useVideoStore = create<VideoStore>((set) => ({
-  videos: [],
-  loading: false,
-  error: null,
-  fetchVideos: async () => {
-    set({ loading: true });
-    try {
-      const response = await fetch(
-        "https://jsonplaceholder.typicode.com/users"
-      );
-      const data = await response.json();
-      set({ videos: data, loading: false });
-    } catch (error) {
-      set({ error: "Failed to fetch videos", loading: false });
-    }
-  },
-}));
-export const useBearStore = create(
+export const useBearStore = create<TBearStoreState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       bears: 0,
-      addABear: () => set({ bears: get().bears + 1 }),
+      color: "red",
+      size: "big",
+      increasePopulation: () =>
+        set((state) => ({
+          bears: state.bears + 1,
+        })),
+      removeAllBears: () => set({ bears: 0 }),
     }),
     {
-      name: "food-storage", // name of the item in the storage (must be unique)
-      storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
+      name: "bear store",
+      partialize: (state) =>
+        Object.fromEntries(
+          Object.entries(state).filter(
+            ([key]) => !["size", "color"].includes(key)
+          )
+        ),
     }
   )
 );
+export const useVideoStore = create<VideoStore>(
+  persist((set) => ({
+      videos: [],
+      addVideo: (video: Video) => {
+        set((state) => ({
+          videos: state.videos.add(video),
+        })),
+      }
+    }),
+    {
+      name: "video-storage", // name of the item in the storage (must be unique)
+      storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
+    })
+
+);
+
+
