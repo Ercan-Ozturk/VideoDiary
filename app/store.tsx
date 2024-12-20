@@ -60,9 +60,3 @@ export const useVideoStore = create<VideoStore>()(
     }
   )
 );
-const initialVideoStoreValue = {
-  videoInfo: new Map<string, string>([
-    ["Tom", "happy"],
-    ["Mary", "smart"],
-  ]),
-};
