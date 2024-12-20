@@ -7,18 +7,6 @@ interface User {
   email: string;
   address: { city: string };
 }
-interface Video {
-  id: number;
-  name: string;
-  description: string;
-  uri: string;
-}
-type VideoStore = {
-  videos: Video[];
-  //loading: boolean;
-  //error: string | null;
-  addVideo: () => void;
-};
 
 interface UserStore {
   users: User[];
@@ -44,51 +32,36 @@ export const useUserStore = create<UserStore>((set) => ({
     }
   },
 }));
-type TBearStoreState = {
-  bears: number;
-  color: string;
-  size: string;
-  increasePopulation: () => void;
-  removeAllBears: () => void;
+interface Video {
+  id: number;
+  name: string;
+  description: string;
+  uri: string;
+}
+type VideoStore = {
+  videos: Video[];
+
+  name: string;
+  description: string;
+  addVideo: () => void;
 };
 
-export const useBearStore = create<TBearStoreState>()(
+export const useVideoStore = create<VideoStore>()(
   persist(
     (set) => ({
-      bears: 0,
-      color: "red",
-      size: "big",
-      increasePopulation: () =>
-        set((state) => ({
-          bears: state.bears + 1,
-        })),
-      removeAllBears: () => set({ bears: 0 }),
+      videos: [],
+      name: "red",
+      description: "big",
+      addVideo: () => set({}),
     }),
     {
-      name: "bear store",
+      name: "video store",
       partialize: (state) =>
         Object.fromEntries(
           Object.entries(state).filter(
-            ([key]) => !["size", "color"].includes(key)
+            ([key]) => !["name", "description"].includes(key)
           )
         ),
     }
   )
 );
-export const useVideoStore = create<VideoStore>(
-  persist((set) => ({
-      videos: [],
-      addVideo: (video: Video) => {
-        set((state) => ({
-          videos: state.videos.add(video),
-        })),
-      }
-    }),
-    {
-      name: "video-storage", // name of the item in the storage (must be unique)
-      storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
-    })
-
-);
-
-
