@@ -1,7 +1,6 @@
-# Video Diary App👋
+# Video Diary App
 
 
-## Get started
 
 1. Install dependencies
 
